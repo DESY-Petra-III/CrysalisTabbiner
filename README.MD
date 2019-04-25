@@ -39,8 +39,8 @@ Common libs:
 
 Special libs required for operation:
 
-    pip install qtpy PySide2 watchdog
-    conda install qtpy PySide2 watchdog
+    pip install qtpy PySide2 watchdog numpy
+    conda install qtpy PySide2 watchdog numpy
 
 Script is working under python 3.6 (PySide2) and can be compacted with lx_Freeze to an executable.
 In order to avoid having a terminal window, please use the __.VBS__ file provided as a startup link.
