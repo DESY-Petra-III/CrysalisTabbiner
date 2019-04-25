@@ -16,16 +16,16 @@ A video introduction will follow shortly.
 Program reads .tabbin files of Crysalis.
 The later can be created with a command __wd t__ of Crysalis. 
 
-User can select binning to group reflections upon reading the file and area (radius parameter) to enhance the filtering further.
+User can select binning to group individual reflections the reading file and area (radius parameter) to enhance the filtering.
 
-One can convert either:
+User can convert either:
 1. File by file by specifying the input and the output files. 
 Each time the input file name is selected, the program starts an watchdog thread with 5 levels below the folder of the selected file.
 New files, if created will appear in the combobox on the top of the interface. 
 
 2. New files appearing in a directory and the subdirectories. Select the parent directory on the top of the interface.
 
-The main part of the code is demonstrated in the [examples](CrysalisLibraryExamples/) section.
+The main operating part of the code is demonstrated in the [examples](CrysalisLibraryExamples/) section.
 
 ## Backend
 The program heavily relies on the _numpy_ and _watchdog_.
@@ -57,3 +57,8 @@ The current [release](releases/) is 0.2.0 which is compatible with Crysalis 39.4
 ## Illustrations
 The raw and filtered data with 0.2.0
 ![raw and converted](CrysalisLibraryExamples/images/before_and_after.png)
+
+## Acknowledgements
+Many thanks to the [Vaclav Petricek](https://www.fzu.cz/en/prizes/dr-vaclav-petricek-has-received-the-barrett-award) for the initial information on the structure of the Crysalis .tabbin files (peak groups and the corresponding data offsets were discovered independently).
+
+Many thanks to Rigaku Crysalis team (former Oxford Crysalis) offering a state of the art software for single crystal data solution.
