@@ -522,16 +522,20 @@ class TabbinController(QtCore.QObject, Tester):
 
         for i in range(level):
             tpath, t1 = os.path.split(tpath)
-            if len(t1) == 0:
-                break
+
             tlist.insert(0, t1)
 
-            if i == level and len(t1) > 0:
-                tlist.insert(0, "..")
-            else:
-                tlist.insert(0, tpath)
+            self.debug("{}/{} {} {} {}".format(i, level, tlist, t1, tpath))
 
-        res = "/".join(tlist)
+            if len(t1) == 0:
+                if i < level-1:
+                    tlist.insert(0, tpath)
+                else:
+                    tlist.insert(0, "..")
+                break
+
+
+        res = "/".join(tlist).replace("//", "/").replace("//", "/")
         return res
 
     def actionSelectFolder(self, path=None):
