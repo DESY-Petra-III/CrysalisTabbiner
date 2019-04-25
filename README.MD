@@ -4,7 +4,7 @@ Purpose of the program to filter certain peaks from Rigaku Crysalis (former Oxfo
 These files contain information on a peak table from a single crystal data sets.
 
 High pressure diamond anvil data sets collected at Perkin-Elmer XRD or Varex detectors 
-can be biased by the strong reflections from diamonds. Since these detectors are built on scintilator technology, 
+can be biased by the strong reflections from diamonds. Since these detectors are built on scintillator technology, 
 it takes time for the scintillator to go to the ground state.
  
 As a result there could be peaks on data frames which hold residual intensity from strong diamond reflections which dissapear slowly.
