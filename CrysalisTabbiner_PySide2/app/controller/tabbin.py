@@ -62,9 +62,11 @@ class TabbinController(QtCore.QObject, Tester):
 
         # watchdog controller
         self.watchdog = WatchdogController(parent=self, debug_mode=debug_mode)
+        self.watchdog_folder = WatchdogController(parent=self, debug_mode=debug_mode)
 
         # directory
         self.current_dir = "/"
+        self.current_watch_folder = "/"
 
         # input file
         self.input_file = ""
@@ -92,7 +94,6 @@ class TabbinController(QtCore.QObject, Tester):
         self.signoutputfile.connect(self.setOutputFile)
         self.signchangefiles.connect(self._starter.signChangeWindowTitle)
         self.widget.cb_filewatchdog.currentIndexChanged.connect(self.updateCBWatchdogIndex)
-        self.widget.btn_pickupfile.clicked.connect(self.updateBtnWatchdogFile)
 
     def prepBeforeInput(self, bflag=False):
         """
@@ -211,6 +212,24 @@ class TabbinController(QtCore.QObject, Tester):
         runner = TabbinRunnableOpen(self.input_file_full, binning=binning)
         self._starter.thcontrol.tryStart(runner)
 
+    def actionUpdateAndProcessFile(self):
+        """
+        Loads the file data
+        :return:
+        """
+        self.cleanTabbinData()
+
+        self.info("{}.actionUpdateAndProcessFile".format(self.__class__.__name__))
+
+        binning = self.widget.sb_binning.value()
+        group = self.widget.sb_group.value()
+        radius = self.widget.sb_radius.value()
+
+        self.prepBeforeRunner()
+
+        runner = TabbinRunnableFullProcess(self.input_file_full, binning, group, radius)
+        self._starter.thcontrol.tryStart(runner)
+
     def actionSelectOutputFile(self):
         """
         Opens the dialog to select the file as an output one
@@ -230,6 +249,7 @@ class TabbinController(QtCore.QObject, Tester):
 
         group = self.widget.sb_group.value()
         radius = self.widget.sb_radius.value()
+
         runner = TabbinRunnableProcess(self.tabbindata, self.output_file_full, group, radius)
         self._starter.thcontrol.tryStart(runner)
 
@@ -403,9 +423,15 @@ class TabbinController(QtCore.QObject, Tester):
         Updates the information on the watchdog filelist
         :return:
         """
-        self.info("New file update ({} : {})".format(path, badddeleteflag))
+
+        # do not watch the recycled folder
+        if "$recyc" in path.lower():
+            return
 
         bupdated = False
+
+        self.debug("New file update ({} : {})".format(path, badddeleteflag))
+        self.debug("Previous lists:\n{}".format(self.wdfilelist))
 
         if badddeleteflag:  # new file
             if not path in self.wdfilelist:
@@ -462,7 +488,7 @@ class TabbinController(QtCore.QObject, Tester):
             fp = fp.replace("\\", "/")
             self.widget.cb_filewatchdog.setToolTip(fp)
 
-    def updateBtnWatchdogFile(self):
+    def actionUpdateBtnWatchdogFile(self):
         """
         Action fired upon a click of the button updating both the input and the output files
         :return:
@@ -472,8 +498,14 @@ class TabbinController(QtCore.QObject, Tester):
             path = self.wdfilelist[index]
 
             # set both file fields to the same value
+            self.info("Step1")
             self._selectInputFile(filepath=path)
+            self.info("Step2")
             self._selectOutputFile(filepath=path)
+
+            # process file at the same time
+            self.info("Step3")
+            self.actionUpdateAndProcessFile()
 
     def _prep_short_path(self, path, level=None):
         """
@@ -496,19 +528,25 @@ class TabbinController(QtCore.QObject, Tester):
 
             if i == level and len(t1) > 0:
                 tlist.insert(0, "..")
+            else:
+                tlist.insert(0, tpath)
 
         res = "/".join(tlist)
         return res
 
-    def actionSelectFolder(self):
+    def actionSelectFolder(self, path=None):
         """
         Selects a folder for a file watch dog
         :return:
         """
-        path =  QtWidgets.QFileDialog.getExistingDirectory(self.widget, "Select a folder for automatic file discovery",
-                                                               self.current_dir)
+        if path is None:
+            path =  QtWidgets.QFileDialog.getExistingDirectory(self.widget, "Select a folder for automatic file discovery",
+                                                                   self.current_dir)
 
-        if path is not None and len(path)>0 and os.path.isdir(path):
+        if path is not None and len(path) > 0 and os.path.isdir(path):
             self.current_dir = path
-            self.watchdog.startObserver(path)
+            self.current_watch_folder = path
+            self.watchdog_folder.startObserver(path)
+
             self.info("Using a folder ({}) for a watch dog processing".format(path))
+            self._starter.signSetStatus("Using the folder ({}) and subfolders to watch files".format(path))

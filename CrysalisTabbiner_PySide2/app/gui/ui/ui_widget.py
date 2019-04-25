@@ -3,12 +3,12 @@
 # Form implementation generated from reading ui file 'ui_widget.ui',
 # licensing of 'ui_widget.ui' applies.
 #
-# Created: Wed Apr 24 13:04:29 2019
+# Created: Thu Apr 25 14:47:44 2019
 #      by: pyside2-uic  running on PySide2 5.12.2
 #
 # WARNING! All changes made in this file will be lost!
 
-from app.imports.common import QtCore, QtGui, QtWidgets
+from PySide2 import QtCore, QtGui, QtWidgets
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -259,7 +259,11 @@ class Ui_Form(object):
         QtCore.QObject.connect(self.btn_process, QtCore.SIGNAL("clicked()"), Form.actionProcessFile)
         QtCore.QObject.connect(self.btn_same, QtCore.SIGNAL("clicked()"), Form.actionMakeSamePath)
         QtCore.QObject.connect(self.btn_openfolder, QtCore.SIGNAL("clicked()"), Form.actionSelectFolder)
+        QtCore.QObject.connect(self.btn_pickupfile, QtCore.SIGNAL("clicked()"), Form.actionUpdateBtnWatchdogFile)
         QtCore.QMetaObject.connectSlotsByName(Form)
+        Form.setTabOrder(self.cb_filewatchdog, self.btn_openfolder)
+        Form.setTabOrder(self.btn_openfolder, self.btn_pickupfile)
+        Form.setTabOrder(self.btn_pickupfile, self.le_fileinput)
         Form.setTabOrder(self.le_fileinput, self.btn_openfi)
         Form.setTabOrder(self.btn_openfi, self.btn_reopen)
         Form.setTabOrder(self.btn_reopen, self.sb_binning)

@@ -8,12 +8,14 @@ CONTROLLER_WIDGET_TABBIN = None
 
 # path for the images
 PATH_IMAGES = None
+PATH_LAST_WATCHDOG = None
 
 __all__ = ["set_controller_starter", "get_controller_starter",
            "get_controller_crysalis", "set_controller_crysalis",
            "set_controller_widget_tabbin", "get_controller_widget_tabbin",
            "get_controller_watchdog_depth", "set_controller_watchdog_depth",
-           "set_path_images", "get_path_images"
+           "set_path_images", "get_path_images",
+           "set_last_path_watchdog", "get_last_path_watchdog",
            ]
 
 def set_controller_starter(value):
@@ -55,3 +57,11 @@ def set_path_images(value):
 def get_path_images():
     global PATH_IMAGES
     return PATH_IMAGES
+
+def set_last_path_watchdog(value):
+    global PATH_LAST_WATCHDOG
+    PATH_LAST_WATCHDOG = value
+
+def get_last_path_watchdog():
+    global PATH_LAST_WATCHDOG
+    return PATH_LAST_WATCHDOG

@@ -1,7 +1,7 @@
 from app.imports.common import *
 from app.controller import *
 
-__all__ = ["ThreadingController", "TabbinRunnableOpen", "TabbinRunnableProcess"]
+__all__ = ["ThreadingController", "TabbinRunnableOpen", "TabbinRunnableProcess", "TabbinRunnableFullProcess"]
 
 class ThreadingController(QtCore.QThreadPool, Tester):
     MAX_THREAD_COUNT = 5
@@ -94,7 +94,38 @@ class TabbinRunnableProcess(TabbinRunnableAbstract):
                                   group=self.group, radius=self.radius)
 
             self.emmiter.signstatus.emit("File writing ({}) is finished".format(f))
+            self.emmiter.signtabbincontroller.emit(self.tc)
+        else:
+            self.emmiter.signstatus.emit("Invalid file ({})".format(self.filepath))
             self.emmiter.signtabbincontroller.emit(int(0))
+
+        self.emmiter.deleteLater()
+
+class TabbinRunnableFullProcess(TabbinRunnableAbstract):
+    """
+    Runnable executing the work of file writing
+    """
+    def __init__(self, filepath, binning, group, radius, debug_mode=None):
+        TabbinRunnableAbstract.__init__(self, debug_mode=debug_mode)
+
+        self.filepath = filepath
+        self.binning = binning
+        self.group = group
+        self.radius = radius
+
+    def run(self):
+        if os.path.isfile(self.filepath) and not os.path.isdir(self.filepath):
+            d, f = os.path.split(self.filepath)
+            self.emmiter.signstatus.emit("Opening file ({})".format(f))
+
+            tc = self._crysalis.getTabbin()
+            tc.read_file(self.filepath, binning=self.binning)
+
+            tc.mod_list_pixelmultiframe(self.filepath,
+                                  group=self.group, radius=self.radius)
+
+            self.emmiter.signstatus.emit("File writing ({}) is finished".format(f))
+            self.emmiter.signtabbincontroller.emit(tc)
         else:
             self.emmiter.signstatus.emit("Invalid file ({})".format(self.filepath))
             self.emmiter.signtabbincontroller.emit(int(0))

@@ -12,6 +12,7 @@ class Starter(QtCore.QObject, Tester):
     KEY_SETTINGS_MAINWINDOW = "MainWindow"
     KEY_SETTINGS_SIZE = "size"
     KEY_SETTINGS_POSITION = "position"
+    KEY_SETTINGS_FOLDER = "last_folder"
 
     def __init__(self):
         QtCore.QObject.__init__(self)
@@ -68,9 +69,6 @@ class Starter(QtCore.QObject, Tester):
         icon_path = os.path.join(current_path, "images", "icon.png")
         set_path_images(icon_path)
 
-        # threading
-        self._th_watch = None
-
         # main window
         self._mwindow = MainWindow(self)
         self._mwindow.setIcon(icon_path)
@@ -83,7 +81,6 @@ class Starter(QtCore.QObject, Tester):
 
         # update settings
         self._read_settings()
-
 
     def signChangeWindowTitle(self, input_file="", output_file=""):
         """
@@ -132,17 +129,24 @@ class Starter(QtCore.QObject, Tester):
         try:
             size = self.settings.value(key, QtCore.QSize(800, 600)).toSize()
         except AttributeError:
-            size = self.settings.value(key, QtCore.QSize(800, 600))
+            size = QtCore.QSize(800, 600)
 
         position = None
         key = self.KEY_SETTINGS_POSITION
         try:
             position = self.settings.value(key, QtCore.QPoint(100, 100)).toPoint()
         except AttributeError:
-            position = self.settings.value(key, QtCore.QPoint(100, 100))
+            position = QtCore.QPoint(100, 100)
+
+        key = self.KEY_SETTINGS_FOLDER
+        last_path = self.settings.value(key, "/")
 
         self._mwindow.resize(size)
         self._mwindow.move(position)
+
+        if last_path != "/":
+            self._mwindow.centralWidget().controller.actionSelectFolder(last_path)
+
         self.settings.endGroup()
 
     def _write_settings(self, size, position):
@@ -155,4 +159,12 @@ class Starter(QtCore.QObject, Tester):
         self.settings.beginGroup(self.KEY_SETTINGS_MAINWINDOW)
         self.settings.setValue(self.KEY_SETTINGS_SIZE, size)
         self.settings.setValue(self.KEY_SETTINGS_POSITION, position)
+
+        last_path = self._mwindow.centralWidget().controller.current_watch_folder
+        if last_path is not None and os.path.isdir(last_path):
+            pass
+        else:
+            last_path = "/"
+        self.settings.setValue(self.KEY_SETTINGS_POSITION, last_path)
+
         self.settings.endGroup()

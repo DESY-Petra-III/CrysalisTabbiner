@@ -540,6 +540,9 @@ color: #999;
   </layout>
  </widget>
  <tabstops>
+  <tabstop>cb_filewatchdog</tabstop>
+  <tabstop>btn_openfolder</tabstop>
+  <tabstop>btn_pickupfile</tabstop>
   <tabstop>le_fileinput</tabstop>
   <tabstop>btn_openfi</tabstop>
   <tabstop>btn_reopen</tabstop>
@@ -649,6 +652,22 @@ color: #999;
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btn_pickupfile</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>actionUpdateBtnWatchdogFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>660</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>593</x>
+     <y>-6</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>actionSelectInputFile()</slot>
@@ -657,5 +676,6 @@ color: #999;
   <slot>actionProcessFile()</slot>
   <slot>actionMakeSamePath()</slot>
   <slot>actionSelectFolder()</slot>
+  <slot>actionUpdateBtnWatchdogFile()</slot>
  </slots>
 </ui>

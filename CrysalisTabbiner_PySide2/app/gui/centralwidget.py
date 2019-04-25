@@ -14,8 +14,6 @@ class CentralWidget(QtWidgets.QWidget, Ui_Form, Tester):
 
         self.controller = TabbinController(self, debug_mode=debug_mode, parent=self)
 
-        self.show()
-
     def actionSelectInputFile(self):
         """
         Passes the action to the controller - select input file
@@ -57,3 +55,11 @@ class CentralWidget(QtWidgets.QWidget, Ui_Form, Tester):
         :return:
         """
         self.controller.actionSelectFolder()
+
+    def actionUpdateBtnWatchdogFile(self):
+        """
+        Select the recently updated file
+        :return:
+        """
+        self.info("{}actionUpdateBtnWatchdogFile".format(self.__class__.__name__))
+        self.controller.actionUpdateBtnWatchdogFile()
