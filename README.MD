@@ -42,10 +42,12 @@ Special libs required for operation:
     pip install qtpy PySide2 watchdog numpy
     conda install qtpy PySide2 watchdog numpy
 
-Script is working under python 3.6 (PySide2) and can be compacted with lx_Freeze to an executable.
-In order to avoid having a terminal window, please use the __.VBS__ file provided as a startup link.
+Script is working under python 3.6 (PySide2) and can be compacted with _lx_Freeze_ to an executable.
+In order to avoid having a terminal window appearing, please use the __.VBS__ file provided as a startup link.
 
 Experienced users can also use [bat2exe]( http://www.f2ko.de/de/b2e.php ) converter.
+
+I have tried to clean the size as best as I could (28Mb in compressed __.7z__ release). Most of the size is taken by _numpy_ and a cleaned version of _PySide2_.
 
 ## Releases
 The current [release](releases/) is 0.2.0 which is compatible with Crysalis 39.46 and some versions below.
