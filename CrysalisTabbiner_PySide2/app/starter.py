@@ -126,20 +126,32 @@ class Starter(QtCore.QObject, Tester):
 
         size = None
         key = self.KEY_SETTINGS_SIZE
+        def_size = QtCore.QSize(800, 600)
         try:
-            size = self.settings.value(key, QtCore.QSize(800, 600)).toSize()
+            size = self.settings.value(key, def_size).toSize()
         except AttributeError:
-            size = QtCore.QSize(800, 600)
+            size = self.settings.value(key, def_size)
 
         position = None
         key = self.KEY_SETTINGS_POSITION
+        def_position = QtCore.QPoint(100, 100)
         try:
-            position = self.settings.value(key, QtCore.QPoint(100, 100)).toPoint()
+            position = self.settings.value(key, def_position).toPoint()
         except AttributeError:
-            position = QtCore.QPoint(100, 100)
+            position = self.settings.value(key, def_position)
+
+
+        if not isinstance(size, QtCore.QSize):
+            size = def_size
+
+        if not isinstance(position, QtCore.QPoint):
+            position = def_position
 
         key = self.KEY_SETTINGS_FOLDER
         last_path = self.settings.value(key, "/")
+
+        self.info(size)
+        self.info(position)
 
         self._mwindow.resize(size)
         self._mwindow.move(position)
@@ -156,7 +168,10 @@ class Starter(QtCore.QObject, Tester):
         :param position:
         :return:
         """
+        self.info("Saving Settings")
+
         self.settings.beginGroup(self.KEY_SETTINGS_MAINWINDOW)
+
         self.settings.setValue(self.KEY_SETTINGS_SIZE, size)
         self.settings.setValue(self.KEY_SETTINGS_POSITION, position)
 
@@ -165,6 +180,7 @@ class Starter(QtCore.QObject, Tester):
             pass
         else:
             last_path = "/"
-        self.settings.setValue(self.KEY_SETTINGS_POSITION, last_path)
+        self.settings.setValue(self.KEY_SETTINGS_FOLDER, last_path)
 
         self.settings.endGroup()
+        self.settings.sync()

@@ -48,4 +48,10 @@ In order to avoid having a terminal window, please use the __.VBS__ file provide
 Experienced users can also use [bat2exe]( http://www.f2ko.de/de/b2e.php ) converter.
 
 ## Releases
-The current [release](releases/) is 0.1.0 which is compatible with Crysalis 39.46 and some versions below.
+The current [release](releases/) is 0.2.0 which is compatible with Crysalis 39.46 and some versions below.
+
+    0.1.0-0.2.0 [2019-04-25] First upload and customization of the user experience, additional filtering of artifacts appearing due to the reading electronics (stripes in a frame)
+
+## Illustrations
+The raw and filtered data with 0.2.0
+![raw and converted][CrysalisLibraryExamples/images/before_and_after.png]
