@@ -18,6 +18,13 @@ The later can be created with a command __wd t__ of Crysalis.
 
 User can select binning to group reflections upon reading the file and area (radius parameter) to enhance the filtering further.
 
+One can convert either:
+1. File by file by specifying the input and the output files. 
+Each time the input file name is selected, the program starts an watchdog thread with 5 levels below the folder of the selected file.
+New files, if created will appear in the combobox on the top of the interface. 
+
+2. New files appearing in a directory and the subdirectories. Select the parent directory on the top of the interface.
+
 The main part of the code is demonstrated in the [examples](CrysalisLibraryExamples/) section.
 
 ## Backend
@@ -36,7 +43,7 @@ Special libs required for operation:
     conda install qtpy PySide2 watchdog
 
 Script is working under python 3.6 (PySide2) and can be compacted with lx_Freeze to an executable.
-In order to avoid having a terminal window, please use the .VBS file provided as a startup.
+In order to avoid having a terminal window, please use the __.VBS__ file provided as a startup link.
 
 Experienced users can also use [bat2exe]( http://www.f2ko.de/de/b2e.php ) converter.
 
