@@ -313,7 +313,7 @@ class CrysalisTabbinController(TabbinAbstract):
         # fixed offsets
         OFFSET_POINT_LIST: 312,  # 0x138 - fixed
         OFFSET_POINT_LISTNEXT: 168,
-        OFFSET_GROUPSTART: 806,  # fixed with rescpect to the OFFSET_GROUP_LIST start of the group value for a point
+        OFFSET_GROUPSTART: 806,  # fixed with respect to the OFFSET_GROUP_LIST start of the group value for a point
         OFFSET_GROUPNEXT: 32,  # repetition of the group value for the point
     }
 
@@ -449,6 +449,10 @@ class CrysalisTabbinController(TabbinAbstract):
                 # binning if needed
                 tbpx = int(binning*round(float(tpx)/binning))
                 tbpy = int(binning*round(float(tpy)/binning))
+
+                if tbpx > self.nparray.shape[0] or tbpy > self.nparray.shape[1]:
+                    self.error("Some size is wrong ( x: {}) or ( y: {})".format(tbpx, tbpy))
+                    continue
 
                 txy = "{} {}".format(tbpx, tbpy)
                 if not txy in self.points_xy.keys():

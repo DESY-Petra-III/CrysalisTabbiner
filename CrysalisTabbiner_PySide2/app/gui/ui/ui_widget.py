@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'ui_widget.ui',
 # licensing of 'ui_widget.ui' applies.
 #
-# Created: Mon Mar 25 18:34:06 2019
+# Created: Wed Apr 24 13:04:29 2019
 #      by: pyside2-uic  running on PySide2 5.12.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,13 +13,18 @@ from app.imports.common import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(650, 516)
+        Form.resize(717, 572)
         Form.setStyleSheet("QWidget {\n"
 "background-color: #fff;\n"
 "}\n"
 "\n"
 "\n"
 "QLineEdit {\n"
+"font-size: 16px;\n"
+"border: 1px solid #ccc;\n"
+"}\n"
+"\n"
+"QComboBox {\n"
 "font-size: 16px;\n"
 "border: 1px solid #ccc;\n"
 "}\n"
@@ -98,6 +103,26 @@ class Ui_Form(object):
         self.gridLayout.setContentsMargins(-1, -1, 10, 0)
         self.gridLayout.setHorizontalSpacing(0)
         self.gridLayout.setObjectName("gridLayout")
+        self.gp_filewatchdog = QtWidgets.QGroupBox(Form)
+        self.gp_filewatchdog.setObjectName("gp_filewatchdog")
+        self.gridLayout_6 = QtWidgets.QGridLayout(self.gp_filewatchdog)
+        self.gridLayout_6.setObjectName("gridLayout_6")
+        self.cb_filewatchdog = QtWidgets.QComboBox(self.gp_filewatchdog)
+        self.cb_filewatchdog.setMinimumSize(QtCore.QSize(0, 40))
+        self.cb_filewatchdog.setObjectName("cb_filewatchdog")
+        self.gridLayout_6.addWidget(self.cb_filewatchdog, 0, 0, 1, 1)
+        self.btn_pickupfile = QtWidgets.QPushButton(self.gp_filewatchdog)
+        self.btn_pickupfile.setMaximumSize(QtCore.QSize(100, 16777215))
+        self.btn_pickupfile.setObjectName("btn_pickupfile")
+        self.gridLayout_6.addWidget(self.btn_pickupfile, 0, 2, 1, 1)
+        self.widget_5 = QtWidgets.QWidget(self.gp_filewatchdog)
+        self.widget_5.setMinimumSize(QtCore.QSize(0, 20))
+        self.widget_5.setObjectName("widget_5")
+        self.gridLayout_6.addWidget(self.widget_5, 1, 0, 1, 3)
+        self.btn_openfolder = QtWidgets.QToolButton(self.gp_filewatchdog)
+        self.btn_openfolder.setObjectName("btn_openfolder")
+        self.gridLayout_6.addWidget(self.btn_openfolder, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.gp_filewatchdog, 1, 0, 1, 1)
         self.gp_output = QtWidgets.QGroupBox(Form)
         self.gp_output.setObjectName("gp_output")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.gp_output)
@@ -111,7 +136,7 @@ class Ui_Form(object):
         self.widget_2.setObjectName("widget_2")
         self.gridLayout_3.addWidget(self.widget_2, 1, 0, 1, 5)
         self.widget_3 = QtWidgets.QWidget(self.gp_output)
-        self.widget_3.setMinimumSize(QtCore.QSize(0, 40))
+        self.widget_3.setMinimumSize(QtCore.QSize(0, 110))
         self.widget_3.setObjectName("widget_3")
         self.gridLayout_4 = QtWidgets.QGridLayout(self.widget_3)
         self.gridLayout_4.setContentsMargins(0, 0, 0, 0)
@@ -129,7 +154,7 @@ class Ui_Form(object):
         self.label_8.setObjectName("label_8")
         self.gridLayout_4.addWidget(self.label_8, 0, 0, 1, 1)
         self.sb_group = QtWidgets.QSpinBox(self.widget_3)
-        self.sb_group.setMinimumSize(QtCore.QSize(100, 0))
+        self.sb_group.setMinimumSize(QtCore.QSize(100, 40))
         self.sb_group.setStyleSheet("")
         self.sb_group.setMinimum(1)
         self.sb_group.setMaximum(12)
@@ -137,8 +162,10 @@ class Ui_Form(object):
         self.sb_group.setObjectName("sb_group")
         self.gridLayout_4.addWidget(self.sb_group, 0, 2, 1, 1)
         self.sb_radius = QtWidgets.QSpinBox(self.widget_3)
+        self.sb_radius.setMinimumSize(QtCore.QSize(0, 40))
         self.sb_radius.setMinimum(0)
         self.sb_radius.setMaximum(25)
+        self.sb_radius.setProperty("value", 5)
         self.sb_radius.setObjectName("sb_radius")
         self.gridLayout_4.addWidget(self.sb_radius, 1, 2, 1, 1)
         self.label_10 = QtWidgets.QLabel(self.widget_3)
@@ -161,36 +188,9 @@ class Ui_Form(object):
         self.btn_same = QtWidgets.QPushButton(self.gp_output)
         self.btn_same.setObjectName("btn_same")
         self.gridLayout_3.addWidget(self.btn_same, 0, 3, 1, 1)
-        self.gridLayout.addWidget(self.gp_output, 3, 0, 1, 1)
+        self.gridLayout.addWidget(self.gp_output, 6, 0, 1, 1)
         spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem1, 5, 0, 1, 1)
-        self.widget_4 = QtWidgets.QWidget(Form)
-        self.widget_4.setMinimumSize(QtCore.QSize(0, 12))
-        self.widget_4.setObjectName("widget_4")
-        self.gridLayout.addWidget(self.widget_4, 0, 0, 1, 1)
-        self.gb_input = QtWidgets.QGroupBox(Form)
-        self.gb_input.setMinimumSize(QtCore.QSize(0, 80))
-        self.gb_input.setMaximumSize(QtCore.QSize(16777215, 80))
-        self.gb_input.setObjectName("gb_input")
-        self.gridLayout_2 = QtWidgets.QGridLayout(self.gb_input)
-        self.gridLayout_2.setObjectName("gridLayout_2")
-        self.label = QtWidgets.QLabel(self.gb_input)
-        self.label.setMinimumSize(QtCore.QSize(80, 0))
-        self.label.setObjectName("label")
-        self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
-        self.le_fileinput = QtWidgets.QLineEdit(self.gb_input)
-        self.le_fileinput.setEnabled(False)
-        self.le_fileinput.setMinimumSize(QtCore.QSize(100, 40))
-        self.le_fileinput.setObjectName("le_fileinput")
-        self.gridLayout_2.addWidget(self.le_fileinput, 0, 1, 1, 1)
-        self.btn_openfi = QtWidgets.QToolButton(self.gb_input)
-        self.btn_openfi.setObjectName("btn_openfi")
-        self.gridLayout_2.addWidget(self.btn_openfi, 0, 2, 1, 1)
-        self.btn_reopen = QtWidgets.QToolButton(self.gb_input)
-        self.btn_reopen.setMinimumSize(QtCore.QSize(80, 0))
-        self.btn_reopen.setObjectName("btn_reopen")
-        self.gridLayout_2.addWidget(self.btn_reopen, 0, 3, 1, 1)
-        self.gridLayout.addWidget(self.gb_input, 1, 0, 1, 1)
+        self.gridLayout.addItem(spacerItem1, 8, 0, 1, 1)
         self.widget = QtWidgets.QWidget(Form)
         self.widget.setMinimumSize(QtCore.QSize(0, 80))
         self.widget.setObjectName("widget")
@@ -223,7 +223,34 @@ class Ui_Form(object):
         self.label_5 = QtWidgets.QLabel(self.widget)
         self.label_5.setObjectName("label_5")
         self.gridLayout_5.addWidget(self.label_5, 0, 3, 1, 1)
-        self.gridLayout.addWidget(self.widget, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.widget, 5, 0, 1, 1)
+        self.widget_4 = QtWidgets.QWidget(Form)
+        self.widget_4.setMinimumSize(QtCore.QSize(0, 12))
+        self.widget_4.setObjectName("widget_4")
+        self.gridLayout.addWidget(self.widget_4, 0, 0, 1, 1)
+        self.gb_input = QtWidgets.QGroupBox(Form)
+        self.gb_input.setMinimumSize(QtCore.QSize(0, 80))
+        self.gb_input.setMaximumSize(QtCore.QSize(16777215, 80))
+        self.gb_input.setObjectName("gb_input")
+        self.gridLayout_2 = QtWidgets.QGridLayout(self.gb_input)
+        self.gridLayout_2.setObjectName("gridLayout_2")
+        self.label = QtWidgets.QLabel(self.gb_input)
+        self.label.setMinimumSize(QtCore.QSize(80, 0))
+        self.label.setObjectName("label")
+        self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
+        self.btn_reopen = QtWidgets.QToolButton(self.gb_input)
+        self.btn_reopen.setMinimumSize(QtCore.QSize(80, 0))
+        self.btn_reopen.setObjectName("btn_reopen")
+        self.gridLayout_2.addWidget(self.btn_reopen, 0, 3, 1, 1)
+        self.le_fileinput = QtWidgets.QLineEdit(self.gb_input)
+        self.le_fileinput.setEnabled(False)
+        self.le_fileinput.setMinimumSize(QtCore.QSize(100, 40))
+        self.le_fileinput.setObjectName("le_fileinput")
+        self.gridLayout_2.addWidget(self.le_fileinput, 0, 1, 1, 1)
+        self.btn_openfi = QtWidgets.QToolButton(self.gb_input)
+        self.btn_openfi.setObjectName("btn_openfi")
+        self.gridLayout_2.addWidget(self.btn_openfi, 0, 2, 1, 1)
+        self.gridLayout.addWidget(self.gb_input, 4, 0, 1, 1)
 
         self.retranslateUi(Form)
         QtCore.QObject.connect(self.btn_openfi, QtCore.SIGNAL("clicked()"), Form.actionSelectInputFile)
@@ -231,6 +258,7 @@ class Ui_Form(object):
         QtCore.QObject.connect(self.btn_openfo, QtCore.SIGNAL("clicked()"), Form.actionSelectOutputFile)
         QtCore.QObject.connect(self.btn_process, QtCore.SIGNAL("clicked()"), Form.actionProcessFile)
         QtCore.QObject.connect(self.btn_same, QtCore.SIGNAL("clicked()"), Form.actionMakeSamePath)
+        QtCore.QObject.connect(self.btn_openfolder, QtCore.SIGNAL("clicked()"), Form.actionSelectFolder)
         QtCore.QMetaObject.connectSlotsByName(Form)
         Form.setTabOrder(self.le_fileinput, self.btn_openfi)
         Form.setTabOrder(self.btn_openfi, self.btn_reopen)
@@ -244,6 +272,11 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QtWidgets.QApplication.translate("Form", "Form", None, -1))
+        self.gp_filewatchdog.setTitle(QtWidgets.QApplication.translate("Form", "File watchdog", None, -1))
+        self.btn_pickupfile.setToolTip(QtWidgets.QApplication.translate("Form", "Select a most recent .tabbin file discovered by a watch dog", None, -1))
+        self.btn_pickupfile.setText(QtWidgets.QApplication.translate("Form", "Pick up", None, -1))
+        self.btn_openfolder.setToolTip(QtWidgets.QApplication.translate("Form", "Open parent folder for file watchdog processing", None, -1))
+        self.btn_openfolder.setText(QtWidgets.QApplication.translate("Form", "...", None, -1))
         self.gp_output.setTitle(QtWidgets.QApplication.translate("Form", "Output", None, -1))
         self.btn_process.setToolTip(QtWidgets.QApplication.translate("Form", "Process the data and saves. Filters the points having the same pixel position or position inside the radius", None, -1))
         self.btn_process.setText(QtWidgets.QApplication.translate("Form", "Process", None, -1))
@@ -258,26 +291,16 @@ class Ui_Form(object):
         self.label_2.setText(QtWidgets.QApplication.translate("Form", "Filename:", None, -1))
         self.btn_same.setToolTip(QtWidgets.QApplication.translate("Form", "Makes the output file the same as the input file", None, -1))
         self.btn_same.setText(QtWidgets.QApplication.translate("Form", "Same", None, -1))
-        self.gb_input.setTitle(QtWidgets.QApplication.translate("Form", "Input", None, -1))
-        self.label.setText(QtWidgets.QApplication.translate("Form", "Filename:", None, -1))
-        self.btn_openfi.setToolTip(QtWidgets.QApplication.translate("Form", "Open .tabbin file for processing", None, -1))
-        self.btn_openfi.setText(QtWidgets.QApplication.translate("Form", "...", None, -1))
-        self.btn_reopen.setToolTip(QtWidgets.QApplication.translate("Form", "Update or reload the selected .tabbin file", None, -1))
-        self.btn_reopen.setText(QtWidgets.QApplication.translate("Form", "refresh", None, -1))
         self.lbl_version.setToolTip(QtWidgets.QApplication.translate("Form", "Version of the .tabbin file", None, -1))
         self.label_4.setText(QtWidgets.QApplication.translate("Form", "Num. points:", None, -1))
         self.lbl_numpoints.setToolTip(QtWidgets.QApplication.translate("Form", "Number of points inside the .tabbin file", None, -1))
         self.label_6.setText(QtWidgets.QApplication.translate("Form", "Version:", None, -1))
         self.sb_binning.setToolTip(QtWidgets.QApplication.translate("Form", "Binning option for pixel merging (file opening only)", None, -1))
         self.label_5.setText(QtWidgets.QApplication.translate("Form", "Binning:", None, -1))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
-    sys.exit(app.exec_())
+        self.gb_input.setTitle(QtWidgets.QApplication.translate("Form", "Input", None, -1))
+        self.label.setText(QtWidgets.QApplication.translate("Form", "Filename:", None, -1))
+        self.btn_reopen.setToolTip(QtWidgets.QApplication.translate("Form", "Update or reload the selected .tabbin file", None, -1))
+        self.btn_reopen.setText(QtWidgets.QApplication.translate("Form", "refresh", None, -1))
+        self.btn_openfi.setToolTip(QtWidgets.QApplication.translate("Form", "Open .tabbin file for processing", None, -1))
+        self.btn_openfi.setText(QtWidgets.QApplication.translate("Form", "...", None, -1))
 

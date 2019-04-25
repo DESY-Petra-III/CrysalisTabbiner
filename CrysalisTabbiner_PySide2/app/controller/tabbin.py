@@ -1,6 +1,7 @@
 from app.imports.common import *
 from app.controller import *
 from app.threading import *
+from app.controller.local_watchdog import *
 from app.imports.crysalis.controller import CrysalisController
 from app.imports.crysalis.tabbin import CrysalisTabbinController
 
@@ -12,6 +13,8 @@ class TabbinController(QtCore.QObject, Tester):
     signoutputfile = QtCore.Signal(str)
 
     signchangefiles = QtCore.Signal(str, str)
+
+    WATCHDOG_MAXLENGTH = 7
 
     def __init__(self, widget, parent=None, debug_mode=None):
         QtCore.QObject.__init__(self, parent=parent)
@@ -49,8 +52,16 @@ class TabbinController(QtCore.QObject, Tester):
             widget.btn_openfo,
         )
 
+        self.dis_before_watchdog = (
+            widget.btn_pickupfile,
+            widget.cb_filewatchdog
+        )
+
         # starter
         self._starter = get_controller_starter()
+
+        # watchdog controller
+        self.watchdog = WatchdogController(parent=self, debug_mode=debug_mode)
 
         # directory
         self.current_dir = "/"
@@ -63,6 +74,9 @@ class TabbinController(QtCore.QObject, Tester):
         self.output_file = ""
         self.output_file_full = ""
 
+        # watchdog filelist
+        self.wdfilelist = []
+
         # crysalis controller
         self._crysalis_control = CrysalisController()
         set_controller_crysalis(self._crysalis_control)
@@ -71,11 +85,14 @@ class TabbinController(QtCore.QObject, Tester):
         # prepare initial layout
         self.prepBeforeInput()
         self.prepBeforeOutput()
+        self.prepBeforeWatchDog()
 
         # prepare signals
         self.signinputfile.connect(self.setInputFile)
         self.signoutputfile.connect(self.setOutputFile)
         self.signchangefiles.connect(self._starter.signChangeWindowTitle)
+        self.widget.cb_filewatchdog.currentIndexChanged.connect(self.updateCBWatchdogIndex)
+        self.widget.btn_pickupfile.clicked.connect(self.updateBtnWatchdogFile)
 
     def prepBeforeInput(self, bflag=False):
         """
@@ -95,6 +112,15 @@ class TabbinController(QtCore.QObject, Tester):
         """
         self.debug("Running {}.prepBeforeRunner".format(self.__class__.__name__))
         for el in self.dis_all:
+            el.setEnabled(bflag)
+
+    def prepBeforeWatchDog(self, bflag=False):
+        """
+        Disables the elements before the file is selected
+        :return:
+        """
+        self.debug("Running {}.prepBeforeWatchDog({})".format(self.__class__.__name__, bflag))
+        for el in self.dis_before_watchdog:
             el.setEnabled(bflag)
 
     def prepAfterRunner(self, dummy=""):
@@ -138,6 +164,14 @@ class TabbinController(QtCore.QObject, Tester):
         else:
             self.prepBeforeInput(bflag=True)
             self.widget.le_fileinput.setToolTip(self.input_file_full)
+
+            tpath = self.input_file_full
+            depth = get_controller_watchdog_depth()
+            for i in range(depth):
+                tpath = os.path.split(tpath)[0]
+
+            self.debug("The watchdog will use the path ({}) depth ({})".format(tpath, depth))
+            self.watchdog.startObserver(tpath)
 
         self.signchangefiles.emit(self.input_file, self.output_file)
 
@@ -226,7 +260,7 @@ class TabbinController(QtCore.QObject, Tester):
         else:
             res = self._selectOutputFile()
 
-    def _selectInputFile(self):
+    def _selectInputFile(self, filepath=None):
         """
         Function accepting file input from the user
         :return:
@@ -239,13 +273,16 @@ class TabbinController(QtCore.QObject, Tester):
         try:
             path_test = re.compile("[^\.]+.tabbin")
 
-            for i in range(2):
-                path, selector = QtWidgets.QFileDialog.getOpenFileName(self.widget, "Open Tabbin File",
-                                                                       self.current_dir, "Tabbin files (*.tabbin)")
-                if len(path) == 0:
-                    continue
-                else:
-                    break
+            if filepath is None:
+                for i in range(2):
+                    path, selector = QtWidgets.QFileDialog.getOpenFileName(self.widget, "Open Tabbin File",
+                                                                           self.current_dir, "Tabbin files (*.tabbin)")
+                    if len(path) == 0:
+                        continue
+                    else:
+                        break
+            else:
+                path = filepath
 
             # perform the test for the file - should be tabbin and should be valid
             if len(path) == 0:
@@ -268,7 +305,7 @@ class TabbinController(QtCore.QObject, Tester):
             self.setInputFile(path)
         return res
 
-    def _selectOutputFile(self):
+    def _selectOutputFile(self, filepath=None):
         """
         Function accepting file input from the user
         :return:
@@ -279,13 +316,16 @@ class TabbinController(QtCore.QObject, Tester):
         try:
             path_test = re.compile("[^\.]+.tabbin")
 
-            for i in range(2):
-                path, selector = QtWidgets.QFileDialog.getSaveFileName(self.widget, "Save Tabbin File",
-                                                                       self.current_dir, "Tabbin files (*.tabbin)")
-                if len(path) == 0:
-                    continue
-                else:
-                    break
+            if filepath is None:
+                for i in range(2):
+                    path, selector = QtWidgets.QFileDialog.getSaveFileName(self.widget, "Save Tabbin File",
+                                                                           self.current_dir, "Tabbin files (*.tabbin)")
+                    if len(path) == 0:
+                        continue
+                    else:
+                        break
+            else:
+                path = filepath
 
             # perform the test for the file - should be tabbin and should be valid
             if len(path) == 0:
@@ -342,3 +382,133 @@ class TabbinController(QtCore.QObject, Tester):
         if self.tabbindata is not None:
             del self.tabbindata
         self.tabbindata = None
+
+    def closeEvent(self, ev):
+        """
+        Cleaning up on close
+        :param ev:
+        :return:
+        """
+        self.cleanup()
+
+    def cleanup(self):
+        """
+        Cleaning up the threads and other things
+        :return:
+        """
+        self.watchdog.cleanup()
+
+    def updateWatchdogFileList(self, path, badddeleteflag):
+        """
+        Updates the information on the watchdog filelist
+        :return:
+        """
+        self.info("New file update ({} : {})".format(path, badddeleteflag))
+
+        bupdated = False
+
+        if badddeleteflag:  # new file
+            if not path in self.wdfilelist:
+                self.wdfilelist.insert(0, path)
+                bupdated = True
+            else:
+                self.wdfilelist.pop(self.wdfilelist.index(path))
+                self.wdfilelist.insert(0, path)
+                bupdated = True
+
+            if len(self.wdfilelist) > self.WATCHDOG_MAXLENGTH:
+                self.wdfilelist.pop(-1)
+        else:
+            if path in self.wdfilelist:
+                self.wdfilelist.pop(self.wdfilelist.index(path))
+                bupdated = True
+
+        # make a test if the files are existing
+        tlist = []
+        for el in self.wdfilelist:
+            if os.path.exists(el):
+                tlist.append(el)
+            else:
+                bupdated = True
+
+        # test if any of the other files were moved - renamed
+        if len(tlist)!= len(self.wdfilelist):
+            del self.wdfilelist[:]
+            self.wdfilelist = tlist
+
+        # update the combobox
+        if bupdated:
+            self.widget.cb_filewatchdog.clear()
+            for el in self.wdfilelist:
+                el = el.replace("\\", "/")
+
+                self.widget.cb_filewatchdog.addItem(self._prep_short_path(el))
+                self.widget.cb_filewatchdog.setCurrentIndex(0)
+
+            bdisable = False
+            if self.widget.cb_filewatchdog.count() > 0:
+                bdisable = True
+
+            self.prepBeforeWatchDog(bflag=bdisable)
+
+    def updateCBWatchdogIndex(self, index):
+        """
+        Updates the information on the file
+        :param index:
+        :return:
+        """
+        if self.widget.cb_filewatchdog.count() > 0:
+            fp = self.wdfilelist[index]
+            fp = fp.replace("\\", "/")
+            self.widget.cb_filewatchdog.setToolTip(fp)
+
+    def updateBtnWatchdogFile(self):
+        """
+        Action fired upon a click of the button updating both the input and the output files
+        :return:
+        """
+        if self.widget.cb_filewatchdog.count() > 0:
+            index = self.widget.cb_filewatchdog.currentIndex()
+            path = self.wdfilelist[index]
+
+            # set both file fields to the same value
+            self._selectInputFile(filepath=path)
+            self._selectOutputFile(filepath=path)
+
+    def _prep_short_path(self, path, level=None):
+        """
+        Prepares a shorted version of the path
+        :param path:
+        :return:
+        """
+        res = ""
+        tlist = []
+        tpath = path
+
+        if level is None:
+            level = get_controller_watchdog_depth()
+
+        for i in range(level):
+            tpath, t1 = os.path.split(tpath)
+            if len(t1) == 0:
+                break
+            tlist.insert(0, t1)
+
+            if i == level and len(t1) > 0:
+                tlist.insert(0, "..")
+
+        res = "/".join(tlist)
+        return res
+
+    def actionSelectFolder(self):
+        """
+        Selects a folder for a file watch dog
+        :return:
+        """
+        path =  QtWidgets.QFileDialog.getExistingDirectory(self.widget, "Select a folder for automatic file discovery",
+                                                               self.current_dir)
+
+        if path is not None and len(path)>0 and os.path.isdir(path):
+            self.current_dir = path
+            self.watchdog.startObserver(path)
+            self.info("Using a folder ({}) for a watch dog processing".format(path))

@@ -50,3 +50,10 @@ class CentralWidget(QtWidgets.QWidget, Ui_Form, Tester):
         :return:
         """
         self.controller.actionMakeSamePath()
+
+    def actionSelectFolder(self):
+        """
+        Selects a folder for a watchdog
+        :return:
+        """
+        self.controller.actionSelectFolder()

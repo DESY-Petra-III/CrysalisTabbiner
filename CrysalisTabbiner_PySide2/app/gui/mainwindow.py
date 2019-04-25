@@ -16,6 +16,7 @@ class MainWindow(QtWidgets.QMainWindow, Tester):
         Main initialization script for the main window
         :return:
         """
+
         # controller
         self.starter = starter
 
@@ -34,4 +35,28 @@ class MainWindow(QtWidgets.QMainWindow, Tester):
         # visuals
         self.setWindowTitle(get_window_title())
         self.setStyleSheet("QMainWindow {background-color: #fff;}")
+
+        # icon
         self.show()
+
+    def closeEvent(self, event):
+        """
+        Actions triggered on the move event
+        :param event:
+        :return:
+        """
+        size = self.size()
+        position = self.pos()
+
+        self.starter._write_settings(size, position)
+
+        QtWidgets.QMainWindow.closeEvent(self, event)
+
+    def setIcon(self, path):
+        """
+        Set the icon for the main window
+        :param path:
+        :return:
+        """
+        icon = QtGui.QIcon(path)
+        QtWidgets.QMainWindow.setWindowIcon(self, icon)
