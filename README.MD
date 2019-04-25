@@ -54,4 +54,4 @@ The current [release](releases/) is 0.2.0 which is compatible with Crysalis 39.4
 
 ## Illustrations
 The raw and filtered data with 0.2.0
-![raw and converted][CrysalisLibraryExamples/images/before_and_after.png]
+![raw and converted](CrysalisLibraryExamples/images/before_and_after.png)
