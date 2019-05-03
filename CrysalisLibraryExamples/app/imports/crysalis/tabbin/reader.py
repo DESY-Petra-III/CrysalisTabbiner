@@ -50,7 +50,10 @@ class TabbinAbstract(Tester):
             elif nptype in self.uintlist:
                 value = nptype(int.from_bytes(value, byteorder='little'), signed=False)
             elif nptype in self.floatlist:
-                value = nptype(float.fromhex(value))
+                if len(value) == 8:
+                    value = nptype(struct.unpack("d", value)[0])
+                else:
+                    value = nptype(struct.unpack("f", value)[0])
             res = value
         except ValueError:
             self.error("Cannot convert data ({}) to np.type ({})".format(value, nptype))
@@ -221,6 +224,38 @@ class TabbinPoint(TabbinAbstract):
     @number.setter
     def number(self, value):
         self._number = value
+
+    @property
+    def dx(self):
+        key = OFFSET_DX
+        v = self._read_values(key)
+        if v is not None:
+            v = v
+        return v
+
+    @property
+    def dy(self):
+        key = OFFSET_DY
+        v = self._read_values(key)
+        if v is not None:
+            v = v
+        return v
+
+    @property
+    def dz(self):
+        key = OFFSET_DZ
+        v = self._read_values(key)
+        if v is not None:
+            v = v
+        return v
+
+    @property
+    def dlength(self):
+        key = OFFSET_DLENGTH
+        v = self._read_values(key)
+        if v is not None:
+            v = v
+        return v
 
     @property
     def px(self):
