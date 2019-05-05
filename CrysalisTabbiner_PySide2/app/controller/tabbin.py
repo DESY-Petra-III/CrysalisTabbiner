@@ -520,6 +520,8 @@ class TabbinController(QtCore.QObject, Tester):
         if level is None:
             level = get_controller_watchdog_depth()
 
+        self.info("Path is ({})".format(path))
+
         for i in range(level):
             tpath, t1 = os.path.split(tpath)
 
@@ -544,7 +546,7 @@ class TabbinController(QtCore.QObject, Tester):
         :return:
         """
         if path is None:
-            path =  QtWidgets.QFileDialog.getExistingDirectory(self.widget, "Select a folder for automatic file discovery",
+            path = QtWidgets.QFileDialog.getExistingDirectory(self.widget, "Select a folder for automatic file discovery",
                                                                    self.current_dir)
 
         if path is not None and len(path) > 0 and os.path.isdir(path):
