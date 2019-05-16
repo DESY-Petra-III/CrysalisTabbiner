@@ -184,3 +184,11 @@ class Starter(QtCore.QObject, Tester):
 
         self.settings.endGroup()
         self.settings.sync()
+
+    def signSetClipboard(self, value):
+        """
+        Sets the cliupboard of the application to a specific value
+        :return:
+        """
+        clipboard = QtWidgets.QApplication.clipboard()
+        clipboard.setText(str(value))

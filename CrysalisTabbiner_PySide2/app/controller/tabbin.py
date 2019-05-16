@@ -430,17 +430,20 @@ class TabbinController(QtCore.QObject, Tester):
 
         bupdated = False
 
-        self.debug("New file update ({} : {})".format(path, badddeleteflag))
-        self.debug("Previous lists:\n{}".format(self.wdfilelist))
+        # to avoid any duplicates and etc.
+        path = path.replace("\\", "/")
+
+        self.info("New file update ({} : {})".format(path, badddeleteflag))
+        self.info("Previous lists:\n{}".format(self.wdfilelist))
 
         if badddeleteflag:  # new file
             if not path in self.wdfilelist:
                 self.wdfilelist.insert(0, path)
-                bupdated = True
             else:
                 self.wdfilelist.pop(self.wdfilelist.index(path))
                 self.wdfilelist.insert(0, path)
-                bupdated = True
+
+            bupdated = True
 
             if len(self.wdfilelist) > self.WATCHDOG_MAXLENGTH:
                 self.wdfilelist.pop(-1)
@@ -448,6 +451,9 @@ class TabbinController(QtCore.QObject, Tester):
             if path in self.wdfilelist:
                 self.wdfilelist.pop(self.wdfilelist.index(path))
                 bupdated = True
+
+        # new file list
+        self.info("New lists:\n{}".format(self.wdfilelist))
 
         # make a test if the files are existing
         tlist = []

@@ -1,9 +1,10 @@
 from app.imports.common import *
+from .version import version
 
 __all__ = ["get_debugging_level", "set_debugging_level", "get_window_title", "get_window_statusbar_timeout"]
 
 # configuring the window title
-WINDOW_TITLE = "Tabbin filter"
+WINDOW_TITLE = "Tabbin filter - v{} ".format(version)
 
 # status bar timeour
 WINDOW_STATUSBAR_TIMEOUT = 5000.

@@ -21,6 +21,7 @@ class Emmitter(QtCore.QObject, Tester):
 
     signtabbincontroller = QtCore.Signal(object)
     signstatus = QtCore.Signal(str)
+    signclipboard = QtCore.Signal(object)
 
     def __init__(self, debug_mode=None):
         QtCore.QObject.__init__(self)
@@ -43,6 +44,7 @@ class TabbinRunnableAbstract(QtCore.QRunnable, Tester):
 
         self.emmiter.signtabbincontroller.connect(self._tabbin.signTabbinController)
         self.emmiter.signstatus.connect(self._starter.signSetStatus)
+        self.emmiter.signclipboard.connect(self._starter.signSetClipboard)
 
         self.setAutoDelete(True)
 
@@ -91,10 +93,11 @@ class TabbinRunnableProcess(TabbinRunnableAbstract):
             self.emmiter.signstatus.emit("Writing the file ({})".format(f))
 
             self.tc.mod_list_pixelmultiframe(self.filepath,
-                                  group=self.group, radius=self.radius)
+                                  group=self.group, radius=self.radius, frame_threshold=5)
 
-            self.emmiter.signstatus.emit("File writing ({}) is finished".format(f))
+            self.emmiter.signstatus.emit("File writing ({}) is finished. Check the clipboard.".format(f))
             self.emmiter.signtabbincontroller.emit(self.tc)
+            self.emmiter.signclipboard.emit("rd t \"{}\"".format(self.filepath))
         else:
             self.emmiter.signstatus.emit("Invalid file ({})".format(self.filepath))
             self.emmiter.signtabbincontroller.emit(int(0))
@@ -124,7 +127,8 @@ class TabbinRunnableFullProcess(TabbinRunnableAbstract):
             tc.mod_list_pixelmultiframe(self.filepath,
                                   group=self.group, radius=self.radius)
 
-            self.emmiter.signstatus.emit("File writing ({}) is finished".format(f))
+            self.emmiter.signclipboard.emit("rd t \"{}\"".format(self.filepath))
+            self.emmiter.signstatus.emit("File writing ({}) is finished. Check the clipboard.".format(f))
             self.emmiter.signtabbincontroller.emit(tc)
         else:
             self.emmiter.signstatus.emit("Invalid file ({})".format(self.filepath))
